@@ -19,7 +19,7 @@
 @interface KBCycleScrollView : UIView
 
 @property (nonatomic, strong) NSArray *imageUrlStringGroup;
-/** 自动滚动间隔时间,默认2s */
+/** 自动滚动间隔时间,默认3s */
 @property (nonatomic, assign) CGFloat autoTimeInterval;
 /** 占位图 */
  @property (nonatomic, strong) UIImage *placeHolderImage;

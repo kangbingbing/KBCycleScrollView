@@ -26,8 +26,6 @@
     [self.view addSubview:cycleView];
     cycleView.placeHolderImage = nil;
     cycleView.autoTimeInterval = 3;
-    cycleView.currentPageColor = [UIColor purpleColor];
-    cycleView.otherPageColor = [UIColor brownColor];
     cycleView.imageUrlStringGroup = array;
     
     

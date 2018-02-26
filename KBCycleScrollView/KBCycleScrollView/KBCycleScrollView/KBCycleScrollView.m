@@ -33,7 +33,7 @@ NSString *const ID = @"KBCollectionViewCell";
     if (self) {
         
         
-        self.autoTimeInterval = 2.0;
+        self.autoTimeInterval = 3.0;
         
         [self prepareCollectionView];
         
@@ -70,9 +70,7 @@ NSString *const ID = @"KBCollectionViewCell";
     
     _autoTimeInterval = autoTimeInterval;
     
-    [self invalidateTimer];
-    
-    [self setupTimer];
+    [self setAutoScroll:YES];
 
 
 }
@@ -80,6 +78,15 @@ NSString *const ID = @"KBCollectionViewCell";
 - (void)setDataArray:(NSArray *)dataArray{
     
     _dataArray = dataArray;
+    
+    
+    if (dataArray.count > 1) {
+        self.collectionView.scrollEnabled = YES;
+        [self setAutoScroll:YES];
+    }else{
+        self.collectionView.scrollEnabled = NO;
+        [self setAutoScroll:NO];
+    }
    
 
     // 有数据开始添加 pagecontrol
@@ -98,25 +105,28 @@ NSString *const ID = @"KBCollectionViewCell";
     
     NSInteger currentPage = [self currentIndex] % self.dataArray.count;
     UIPageControl *pageControl = [[UIPageControl alloc] init];
+    _pageControl = pageControl;
     pageControl.numberOfPages = self.dataArray.count;
-    pageControl.currentPageIndicatorTintColor = [UIColor redColor];
-    pageControl.pageIndicatorTintColor = [UIColor yellowColor];
     pageControl.userInteractionEnabled = NO;
     pageControl.currentPage = currentPage;
+    pageControl.currentPageIndicatorTintColor = self.currentPageColor;
+    pageControl.pageIndicatorTintColor = self.otherPageColor;
     [self addSubview:pageControl];
-    _pageControl = pageControl;
+    
 
 
 }
 
 - (void)setCurrentPageColor:(UIColor *)currentPageColor{
 
+    _currentPageColor = currentPageColor;
     _pageControl.currentPageIndicatorTintColor = currentPageColor;
-
+  
 }
 
 - (void)setOtherPageColor:(UIColor *)otherPageColor{
 
+    _otherPageColor = otherPageColor;
     _pageControl.pageIndicatorTintColor = otherPageColor;
 }
 
@@ -128,7 +138,10 @@ NSString *const ID = @"KBCollectionViewCell";
     NSInteger currentIndex = [self currentIndex];
     
     NSInteger targetIndex = currentIndex + 1;
-    NSLog(@"%zd",targetIndex);
+//    NSLog(@"%zd",targetIndex);
+    
+    
+    
     if (targetIndex >= _dataArray.count * 100) {
         // 无限轮播, 如果大于最大值, 就让其索引减半, 无动画方式回滚
         targetIndex = _dataArray.count * 100 * 0.5;
@@ -154,6 +167,17 @@ NSString *const ID = @"KBCollectionViewCell";
     }
     
     return MAX(0, index);
+}
+
+- (void)setAutoScroll:(BOOL)autoScroll{
+    
+    [self invalidateTimer];
+    
+    if (autoScroll) {
+        [self setupTimer];
+    }
+    
+    
 }
 
 - (void)setupTimer{
@@ -192,6 +216,13 @@ NSString *const ID = @"KBCollectionViewCell";
     _flowLayout.itemSize = self.frame.size;
     
     _collectionView.frame = self.bounds;
+    
+    if (_collectionView.contentOffset.x == 0 &&  self.dataArray.count) {
+        int targetIndex = _dataArray.count * 100 * 0.5;
+        
+        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:targetIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    }
+    
     
     // pageControl frame, 宽是高的1.5倍
     CGSize size = CGSizeMake(self.dataArray.count * 20 * 1.5, 20);
