@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "KBCycleScrollView"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "A short description of KBCycleScrollView."
 
 
@@ -83,7 +83,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "KBCycleScrollView", "KBCycleScrollView/KBCycleScrollView/**/*.{h,m}"
+  s.source_files  = "KBCycleScrollView", "KBCycleScrollView/KBCycleScrollView/KBCycleScrollView/**/*.{h,m}"
 
   # s.public_header_files = "Classes/**/*.h"
 
